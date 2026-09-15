@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModuleContent, type ModuleKey } from "./module-content";
 import { PwaControls } from "./pwa-controls";
 
@@ -250,24 +250,31 @@ function ModuleShell({
 export default function Home() {
   const [role, setRole] = useState<string | null>(null);
   const [activeModule, setActiveModule] = useState<ModuleKey | null>(null);
-  const [savedPlan, setSavedPlan] = useState<string[]>(() => {
-    if (typeof window === "undefined") return [];
+  const [savedPlan, setSavedPlan] = useState<string[]>([]);
+
+  useEffect(() => {
     try {
-      const stored = window.localStorage.getItem("wardwell-shield-plan");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      // Local storage may be unavailable in privacy-restricted browsers.
-      return [];
-    }
-  });
+      const stored = JSON.parse(window.localStorage.getItem("wardwell-shield-plan") || "[]");
+      if (Array.isArray(stored)) setSavedPlan(stored.filter((item): item is string => typeof item === "string").slice(0, 3));
+    } catch { /* The in-session plan still works when storage is unavailable. */ }
+    const syncModule = () => {
+      const key = window.location.hash.slice(1);
+      setActiveModule(modules.some((module) => module.key === key) ? key as ModuleKey : null);
+    };
+    syncModule();
+    window.addEventListener("hashchange", syncModule);
+    return () => window.removeEventListener("hashchange", syncModule);
+  }, []);
 
   const openModule = (module: ModuleKey) => {
     setActiveModule(module);
+    window.history.replaceState(null, "", "#" + module);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const goHome = () => {
     setActiveModule(null);
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -286,7 +293,7 @@ export default function Home() {
 
   return (
     <div className="app-shell">
-      <AppHeader role={role} onHome={goHome} onExit={() => { setRole(null); setActiveModule(null); }} />
+      <AppHeader role={role} onHome={goHome} onExit={() => { setRole(null); goHome(); }} />
       {activeModule ? (
         <ModuleShell moduleKey={activeModule} onBack={goHome} onNavigate={openModule} onHome={goHome} savedPlan={savedPlan} onCommit={savePlan} />
       ) : (
@@ -294,7 +301,7 @@ export default function Home() {
       )}
       <footer className="app-footer">
         <span>Managerial Support Platform for Mental Health</span>
-        <span>Prototype · English</span>
+        <span>Modules updated · September 2026 · English</span>
       </footer>
     </div>
   );

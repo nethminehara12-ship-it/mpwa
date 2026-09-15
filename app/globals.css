@@ -555,3 +555,32 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* September module update: referral matrix and guided Shield activities. */
+.cross-referral { display: grid; gap: 1rem; }
+.cross-referral > h2 { margin: 0; font-size: clamp(1.4rem, 3vw, 1.8rem); }
+.cross-referral > p { margin: 0; line-height: 1.7; }
+.directory-table-wrap { overflow-x: auto; border: 1px solid #d9e2ea; border-radius: 1rem; }
+.directory-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 1rem; }
+.directory-table th, .directory-table td { padding: 1rem; vertical-align: top; line-height: 1.6; border-bottom: 1px solid #e2e8f0; }
+.directory-table th { background: #eff5f9; color: #203947; }
+.directory-table tr:last-child td { border-bottom: 0; }
+.directory-table a, .navodaya-card a.source-link { color: #155a79; }
+.navodaya-card { background: #eff7fa; border: 1px solid #c7dfe8; border-radius: 1rem; padding: clamp(1.1rem, 3vw, 2rem); }
+.navodaya-card h3 { margin: .5rem 0; font-size: 1.3rem; }
+.navodaya-card p { line-height: 1.7; }
+.navodaya-card dl { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+.navodaya-card dt { font-size: .875rem; font-weight: 600; color: #526774; }
+.navodaya-card dd { margin: .25rem 0 0; }
+.local-directory ul { padding-left: 1.2rem; line-height: 1.8; margin: 1rem 0; }
+.shield-progress { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); padding: 0; margin: 0; gap: .5rem; }
+.shield-progress li { padding: .75rem; border-radius: .6rem; background: #eff3f6; color: #52616d; font-size: .875rem; }
+.shield-progress li[aria-current="step"] { background: #d9eee4; color: #15583f; font-weight: 700; }
+.interactive-tool .question-navigation { margin-top: 1.5rem; }
+.scenario-option { line-height: 1.6; }
+.urgent-actions { flex-wrap: wrap; }
+@media (max-width: 640px) {
+  .shield-progress { grid-template-columns: 1fr 1fr; }
+  .directory-table th, .directory-table td { padding: .65rem; min-width: 8.5rem; }
+  .navodaya-card dl { grid-template-columns: 1fr; }
+}
